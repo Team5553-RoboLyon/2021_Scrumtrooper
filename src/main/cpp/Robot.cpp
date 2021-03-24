@@ -142,6 +142,7 @@ void Robot::RobotInit()
     m_moteurGaucheFollower.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
 
     m_PowerEntry = frc::Shuffleboard::GetTab("voltage").Add("Voltage", 0.0).WithWidget(frc::BuiltInWidgets::kTextView).GetEntry();
+    m_throttle = frc::Shuffleboard::GetTab("voltage").Add("throttle", 0.0).WithWidget(frc::BuiltInWidgets::kNumberSlider).GetEntry();
 #if IMU
     m_speedY = frc::Shuffleboard::GetTab("voltage").Add("speedY", 0.0).WithWidget(frc::BuiltInWidgets::kTextView).GetEntry();
     m_speedX = frc::Shuffleboard::GetTab("voltage").Add("speedX", 0.0).WithWidget(frc::BuiltInWidgets::kTextView).GetEntry();
@@ -356,6 +357,23 @@ void Robot::TeleopPeriodic()
     m_va_max.m_acceleration = m_PowerEntry.GetDouble(0.0f);
     DriveA(-m_leftHandController.GetY(), m_rightHandController.GetZ());
     std::cout << m_encodeurExterneGauche.GetDistance() << std::endl;
+#endif
+
+#if XBOX_CONTROLLER
+#else:
+    double actualThrottle = m_rightHandController.GetThrottle();
+    if (m_rightHandController.GetRawButton(1))
+    {
+        m_rightShooterFalcon.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, actualThrottle);
+        m_leftShooterFalcon.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, actualThrottle);
+    }
+    else
+    {
+        m_rightShooterFalcon.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0);
+        m_leftShooterFalcon.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0);
+    }
+    m_throttle.SetDouble(actualThrottle);
+
 #endif
 }
 

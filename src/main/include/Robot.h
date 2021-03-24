@@ -14,6 +14,7 @@
 #else
 #include <frc/Joystick.h>
 #endif
+#include <ctre/Phoenix.h>
 #include <frc/DoubleSolenoid.h>
 #include <frc/Encoder.h>
 #include <rev/CANSparkMax.h>
@@ -77,11 +78,11 @@ private:
   VA m_va_max;
   KineticToVoltage m_kv;
 
-  nt::NetworkTableEntry m_PowerEntry, m_logGyro, m_speedY, m_speedX;
-  rev::CANSparkMax m_moteurDroite{1, rev::CANSparkMax::MotorType::kBrushless};
-  rev::CANSparkMax m_moteurDroiteFollower{4, rev::CANSparkMax::MotorType::kBrushless};
-  rev::CANSparkMax m_moteurGauche{2, rev::CANSparkMax::MotorType::kBrushless};
-  rev::CANSparkMax m_moteurGaucheFollower{3, rev::CANSparkMax::MotorType::kBrushless};
+  nt::NetworkTableEntry m_PowerEntry, m_logGyro, m_speedY, m_speedX, m_throttle;
+  rev::CANSparkMax m_moteurDroite{RIGHT_MASTER_GEARBOX_MOTOR_CAN_ID, rev::CANSparkMax::MotorType::kBrushless};
+  rev::CANSparkMax m_moteurDroiteFollower{RIGHT_SLAVE_GEARBOX_MOTOR_CAN_ID, rev::CANSparkMax::MotorType::kBrushless};
+  rev::CANSparkMax m_moteurGauche{LEFT_MASTER_GEARBOX_MOTOR_CAN_ID, rev::CANSparkMax::MotorType::kBrushless};
+  rev::CANSparkMax m_moteurGaucheFollower{LEFT_SLAVE_GEARBOX_MOTOR_CAN_ID, rev::CANSparkMax::MotorType::kBrushless};
 
   frc::PowerDistributionPanel m_pdp;
 
@@ -111,4 +112,6 @@ private:
   frc::Joystick m_leftHandController{0};
   frc::Joystick m_rightHandController{1};
 #endif
+  TalonFX m_leftShooterFalcon{LEFT_SHOOTER_FALCON_CAN_ID};
+  TalonFX m_rightShooterFalcon{RIGHT_SHOOTER_FALCON_CAN_ID};
 };
